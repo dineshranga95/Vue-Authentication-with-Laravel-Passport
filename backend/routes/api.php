@@ -10,4 +10,15 @@ use App\Http\Controllers\Api\AuthController;
 Route::prefix('auth')->group(function(){
     Route::post('/register', 'Api\AuthController@register');
     Route::post('/login', 'Api\AuthController@login');
+
+    Route::get('/login', function(){
+        return response()->json(['msg'=>'unauthorized'], 401);
+    } )->name('login');
+
+    Route::middleware('auth:api')->group(function(){
+        Route::post('/logout', 'Api\AuthController@logout');
+        Route::get('/user', 'Api\AuthController@index');
+        Route::get('/user/{id}', 'Api\AuthController@show');
+    });
+    
 });

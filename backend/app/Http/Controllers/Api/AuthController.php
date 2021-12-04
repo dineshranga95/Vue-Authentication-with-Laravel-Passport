@@ -12,6 +12,11 @@ use Exception;
 
 class AuthController extends Controller
 {    
+    public function index(){
+        $users = User::get();
+
+        return response()->json(['msg'=>'success', 'users'=>$users]);
+    }
     public function register(Request $request){
         $validate= Validator::make($request->all(),[
             'name'=> 'required|min:3',
@@ -55,5 +60,20 @@ class AuthController extends Controller
         }else{
             return response()->json(['msg'=>'unauthorized'], 401);
         }
+    }
+
+    public function logout(Request $request){
+        auth::user()->token()->revoke();
+
+        return response()->json(['msg'=>'Succesfully Logged Out']);
+    }
+    public function show($id){
+        $user= User::find($id);
+        if($user){
+            return response()->json(['msg'=>'success','user'=>$user]);
+        }else{
+            return response()->json(['msg'=>'Data Not Found']);
+        }
+        
     }
 }
