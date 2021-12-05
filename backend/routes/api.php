@@ -19,6 +19,8 @@ Route::prefix('auth')->group(function(){
         Route::post('/logout', 'Api\AuthController@logout');
         Route::get('/user', 'Api\AuthController@index');
         Route::get('/user/{id}', 'Api\AuthController@show');
+
+        Route::resource('/blog', 'Api\BlogController');
     });
     
 });

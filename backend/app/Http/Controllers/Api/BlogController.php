@@ -4,7 +4,9 @@ namespace App\Http\Controllers\Api;
 
 use App\Blog;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Validator;
 use Illuminate\Http\Request;
+use Exception;
 
 class BlogController extends Controller
 {
@@ -15,7 +17,9 @@ class BlogController extends Controller
      */
     public function index()
     {
-        //
+        $blogs= Blog::All();
+
+        return response()->json(['mmsg'=>'success', 'blogs'=>$blogs]);
     }
 
     /**
@@ -23,11 +27,7 @@ class BlogController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create()
-    {
-        //
-    }
-
+    
     /**
      * Store a newly created resource in storage.
      *
@@ -36,7 +36,28 @@ class BlogController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        
+        $validate=Validator::make($request->all(), [
+            'title' => 'required|min:10|max:255',
+            'description' =>'required|min:20'
+        ]);
+        
+        if($validate->fails()){
+            return response()->json(['msg'=>'validation error', 'data'=>$validate->errors()],422);
+        }
+        try{
+            $blog=Blog::create([
+                'title' => $request->title,
+                'description'=> $request->description
+            ]);            
+            return response()->json(['status'=>true, 'msg'=>'blog create success', 'blog'=>$blog]);
+        }
+        catch(Exception $e){
+                return response()->json([
+                    'msg'=>$e->getMessage()
+                ], $e->getCode());
+                 
+            }  
     }
 
     /**
@@ -45,9 +66,16 @@ class BlogController extends Controller
      * @param  \App\Blog  $blog
      * @return \Illuminate\Http\Response
      */
-    public function show(Blog $blog)
+    public function show($id)
     {
-        //
+        $blog= Blog::find($id);
+
+        if($blog){
+            return response()->json(['mmsg'=>'success', 'blog'=>$blog]);
+        }else{
+            return response()->json(['msg'=>'Data Not Found']);
+        }
+       
     }
 
     /**
@@ -56,11 +84,7 @@ class BlogController extends Controller
      * @param  \App\Blog  $blog
      * @return \Illuminate\Http\Response
      */
-    public function edit(Blog $blog)
-    {
-        //
-    }
-
+    
     /**
      * Update the specified resource in storage.
      *
@@ -68,9 +92,30 @@ class BlogController extends Controller
      * @param  \App\Blog  $blog
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Blog $blog)
+    public function update(Request $request, $id)
     {
-        //
+        $validate=Validator::make($request->all(), [
+            'title' => 'required|min:10|max:255',
+            'description' =>'required|min:20'
+        ]);
+        
+        if($validate->fails()){
+            return response()->json(['msg'=>'validation error', 'data'=>$validate->errors()],422);
+        }
+        try{
+            $blog=Blog::find($id);
+            $blog->title=$request->title;
+            $blog->description=$request->description;
+            $blog->save();
+
+            return response()->json(['status'=>true, 'msg'=>'blog update success', 'blog'=>$blog]);
+        }
+        catch(Exception $e){
+                return response()->json([
+                    'msg'=>$e->getMessage()
+                ], $e->getCode());
+                 
+            }  
     }
 
     /**
@@ -79,8 +124,22 @@ class BlogController extends Controller
      * @param  \App\Blog  $blog
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Blog $blog)
+    public function destroy($id)
     {
-        //
+        
+        try{
+            $blog=Blog::find($id);
+            if($blog){
+                $blog->delete();               
+            }
+            return response()->json(['mmsg'=>'blog delete success']);
+        }
+        catch(Exception $e){
+                return response()->json([
+                    'msg'=>'Somethng Wrong'
+                ], $e->getCode());
+                 
+            } 
+          
     }
 }
