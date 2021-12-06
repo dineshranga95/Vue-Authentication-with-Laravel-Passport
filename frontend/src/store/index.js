@@ -39,7 +39,8 @@ export default new Vuex.Store({
 
       return new Promise ((resolve, reject)=>{
         axios.post('http://127.0.0.1:8000/api/auth/logout')
-          .then(response=>{                     
+          .then(response=>{   
+            localStorage.removeItem('accessToken')                   
             context.commit('removeToken')
             resolve(response)
           }).catch(error=>{
