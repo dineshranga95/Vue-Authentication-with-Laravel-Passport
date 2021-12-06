@@ -38,7 +38,9 @@ export default {
     },
     methods:{
       login(){
-        this.$store.dispatch('login', this.credential)
+        this.$store.dispatch('login', this.credential).then( ()=>{          
+          this.$router.push('/')
+        })
       }
     }
 

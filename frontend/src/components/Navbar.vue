@@ -15,11 +15,14 @@
                            <router-link class="nav-link" to="/about">About</router-link>
                       </li> 
                       <li class="nav-item">
-                           <router-link class="nav-link" to="/login">Login</router-link>
+                           <router-link class="nav-link" to="/login" v-if="!loggedIn">Login</router-link>
                       </li> 
                       <li class="nav-item">
-                           <router-link class="nav-link" to="/register">Register</router-link>
-                      </li>        
+                           <router-link class="nav-link" to="/register" v-if="!loggedIn">Register</router-link>
+                      </li>
+                      <li class="nav-item">
+                           <router-link class="nav-link" to="/logOut" v-if="loggedIn">LogOut</router-link>
+                      </li>         
                     </ul>      
                   </div>
                 </div>
@@ -29,7 +32,12 @@
 
 <script>
 export default {
-    name:"Navbar"
+    name:"Navbar",
+    computed:{
+      loggedIn(){
+        return this.$store.getters.loggedIn
+      }
+    }
 }
 </script>
  
