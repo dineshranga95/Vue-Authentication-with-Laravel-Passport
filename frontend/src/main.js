@@ -3,8 +3,10 @@ import App from './App.vue'
 import router from './router'
 import store from './store'
 
+window.toastr = require('toastr')
+
 require ("bootstrap")
-import "bootstrap/dist/css/bootstrap.css"
+import "./assets/scss/app.scss"
 
 Vue.config.productionTip = false
 

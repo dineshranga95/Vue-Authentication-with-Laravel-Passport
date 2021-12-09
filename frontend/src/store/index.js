@@ -28,7 +28,7 @@ export default new Vuex.Store({
           .then(response=>{
             localStorage.setItem('accessToken',response.data.user.access_token)          
             context.commit('setToken', response.data.user.access_token)
-            resolve(response)
+            resolve(response.data)
           }).catch(error=>{
             reject(error)
         })
@@ -42,12 +42,22 @@ export default new Vuex.Store({
           .then(response=>{   
             localStorage.removeItem('accessToken')                   
             context.commit('removeToken')
-            resolve(response)
+            resolve(response.data)
           }).catch(error=>{
             reject(error)
         })
       })
-    }    
+    },
+    register(context, form){
+      return new Promise ((resolve, reject)=>{
+        axios.post('http://127.0.0.1:8000/api/auth/register', form)
+          .then(response=>{   
+            resolve(response.data)
+          }).catch(error=>{
+            reject(error)
+        })
+      })
+    }
   },
   modules: {
   } 

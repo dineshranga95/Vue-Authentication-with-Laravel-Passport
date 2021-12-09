@@ -11,7 +11,7 @@ const routes = [
     name: 'Home',
     component: Home,
     meta:{
-      requiresAuth:true
+      requiresAuth:false
     }
   },
   {
@@ -19,7 +19,7 @@ const routes = [
     name: 'About',   
     component: () => import('../views/About.vue'),
     meta:{
-      requiresAuth:true
+      requiresAuth:false
     }
   },
   {
@@ -35,7 +35,7 @@ const routes = [
     name: 'Register',   
     component: () => import('../views/Register.vue'),
     meta:{
-      requiresAuth:true
+      requiresAuth:false
     }
   },
   {
@@ -63,7 +63,8 @@ router.beforeEach((to, from, next) => {
       next()
     }
   } else if (to.matched.some(record => record.meta.visitor)) {   
-    if (store.getters.loggedIn) {
+    if (
+      store.getters.loggedIn) {
       next({
         path: '/',
       })

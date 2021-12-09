@@ -38,8 +38,18 @@ export default {
     },
     methods:{
       login(){
-        this.$store.dispatch('login', this.credential).then( ()=>{          
+        
+        this.$store.dispatch('login', this.credential).then( response=>{ 
+          //eslint-disable-next-line no-undef
+          toastr.success(response.msg)     
           this.$router.push('/')
+        }).catch(error=>{
+          for (const [k, v] of Object.entries(error.response.data.data)){
+             //eslint-disable-next-line no-undef
+          toastr.error(v)
+          console.warn(k)
+          
+          }
         })
       }
     }
